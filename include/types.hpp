@@ -1,6 +1,6 @@
 #pragma once
 
-namespace peregrine {
+namespace peregrine::core {
 
 	enum class LBool {
 		TRUE,
@@ -19,7 +19,7 @@ namespace peregrine {
 		}
 	}
 
-	bool isUndefined(LBool x) {
+	inline bool isUndefined(LBool x) {
 		return x == LBool::UNDEF;
 	}
 
@@ -34,7 +34,7 @@ namespace peregrine {
 		return set ? x : -x;
 	}
 
-	bool ifNeg(Lit x) {
+	inline bool ifNeg(Lit x) {
 		return x < 0;
 	}
 }

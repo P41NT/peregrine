@@ -15,7 +15,7 @@ endif()
 project ("peregrine")
 
 # Add source to this project's executable.
-add_executable (peregrine "src/peregrine.cpp" "include/peregrine.h" "include/clauses.h"  "include/assignment.h" "include/types.h" "include/parser.h")
+add_executable (peregrine "src/peregrine.cpp" "include/peregrine.hpp" "include/clauses.hpp"  "include/assignment.hpp" "include/types.hpp" "include/parser.hpp" "src/clauses/assignment.cpp" "src/parsers/parser.cpp" "src/propagators/propagator.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET peregrine PROPERTY CXX_STANDARD 20)
