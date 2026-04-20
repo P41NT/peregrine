@@ -62,6 +62,10 @@ namespace peregrine::clauses {
 
 		template <typename T> requires std::convertible_to<T, std::vector<Lit>>
 		void add_clause(T&& clause) {
+			size_t current_clause_index = num_clauses();
+			for (const Lit lit : clause) {
+				watches[literal_index(lit)].push_back(current_clause_index);
+			}
 			clauses.emplace_back(std::forward<T>(clause));
 		}
 

@@ -17,8 +17,6 @@ int main() {
 	// just for testing
 	std::ifstream file("C:\\Users\\shawn\\source\\repos\\peregrine\\tests\\dimacs_cnf\\aim100.cnf");
 
-	std::cout << "Hello there" << std::endl;
-
 	if (!file) {
 		std::cout << "Could not open file" << std::endl;
 		return 1;
