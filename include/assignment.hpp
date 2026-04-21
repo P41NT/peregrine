@@ -29,9 +29,12 @@ namespace peregrine::clauses {
 		void new_level() noexcept;
 
 		void enqueue(Var x, LBool value, size_t reason_idx) noexcept;
+		void enqueue(Lit x, size_t reason_idx) noexcept;
 
 		void pop_to_level(size_t level) noexcept;
 
 		size_t getCurrentLevel() const noexcept;
+
+		Lit getLitAtLevel(size_t level) const noexcept;
 	};
 }

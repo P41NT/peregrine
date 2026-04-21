@@ -17,8 +17,7 @@ namespace peregrine::clauses {
 		{ c.add_clause(clause_lits) };
 		{ c.num_clauses() } -> std::convertible_to<size_t>;
 		{ c.num_vars() } -> std::convertible_to<size_t>;
-		{ c.watch_list(lit) } -> std::same_as<std::vector<size_t>&>;
-		{ c.get_clause(clause_id) } -> std::same_as<std::span<const Lit>>;
+		{ c.get_clause(clause_id) } -> std::same_as<std::span<Lit>>;
 	};
 
 	class ClauseStoreDefault {
@@ -38,12 +37,10 @@ namespace peregrine::clauses {
 
 		size_t numVariables;
 		std::vector<CNFClause> clauses;
-		std::vector<std::vector<size_t>> watches;
 
 	public:
 		explicit ClauseStoreDefault(size_t numVariables)
-			: numVariables(numVariables),
-			watches(2 * (numVariables + 1))
+			: numVariables(numVariables)
 		{ }
 
 		bool is_satisfied(const Assignment& assignment) const noexcept {
@@ -63,23 +60,16 @@ namespace peregrine::clauses {
 		template <typename T> requires std::convertible_to<T, std::vector<Lit>>
 		void add_clause(T&& clause) {
 			size_t current_clause_index = num_clauses();
-			for (const Lit lit : clause) {
-				watches[literal_index(lit)].push_back(current_clause_index);
-			}
 			clauses.emplace_back(std::forward<T>(clause));
 		}
 
-		auto watch_list(Lit lit) -> std::vector<size_t>& {
-			return watches[literal_index(lit)];
-		}
-
-		auto get_clause(size_t clause_id) const -> std::span<const Lit> {
+		auto get_clause(size_t clause_id) -> std::span<Lit> {
 			return clauses[clause_id].literals;
 		}
 
 	private:
 		inline size_t literal_index(Lit x) const noexcept {
-			return static_cast<size_t>(2) * LitToVar(x) + ifNeg(x);
+			return static_cast<size_t>(2) * LitToVar(x).val + ifNeg(x);
 		}
 	};
 }

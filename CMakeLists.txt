@@ -3,7 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable Hot Reload for MSVC compilers if supported.
@@ -17,8 +17,3 @@ project ("peregrine")
 # Add source to this project's executable.
 add_executable (peregrine "src/peregrine.cpp" "include/peregrine.hpp" "include/clauses.hpp"  "include/assignment.hpp" "include/types.hpp" "include/parser.hpp" "src/clauses/assignment.cpp" "src/parsers/parser.cpp" "src/propagators/propagator.cpp")
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET peregrine PROPERTY CXX_STANDARD 20)
-endif()
-
-# TODO: Add tests and install targets if needed.

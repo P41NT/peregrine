@@ -23,18 +23,31 @@ namespace peregrine::core {
 		return x == LBool::UNDEF;
 	}
 
-	using Var = uint8_t;
-	using Lit = int8_t;
+	// for strong-typing between Var, Lit and other integers
+	template<typename Tag>
+	struct StrongInt {
+		explicit StrongInt(int v) : val(v) {}
+		int val;
+	};
 
+	struct LitTag {};
+	struct VarTag {};
+
+	using Lit = StrongInt<LitTag>;
+	using Var = StrongInt<VarTag>;
+
+	// explicit conversions between Var and Lit
 	inline Var LitToVar(Lit x) {
-		return (x < 0 ? -x : x);
+		int val = x.val;
+		return static_cast<Var>(val < 0 ? -val : val);
 	}
 
-	inline Lit VarToLit(Var x, bool set) {
-		return set ? x : -x;
+	inline Lit VarToLit(Var x, bool set = true) {
+		int val = x.val;
+		return set ? Lit{ val } : Lit{ -val };
 	}
 
 	inline bool ifNeg(Lit x) {
-		return x < 0;
+		return x.val < 0;
 	}
 }

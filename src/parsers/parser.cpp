@@ -35,7 +35,7 @@ namespace peregrine::parse {
 							break;
 						}
 						else {
-							Lit currVar = peregrine::core::VarToLit(literal, true);
+							Lit currVar = peregrine::core::VarToLit(Var{ literal }, true);
 							current_clause.push_back(currVar);
 						}
 					}
