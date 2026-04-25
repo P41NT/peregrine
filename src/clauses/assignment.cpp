@@ -7,7 +7,7 @@ namespace peregrine::clauses {
 	LBool Assignment::getLit(Lit x) const noexcept { return ifNeg(x) ? !assignments[LitToVar(x).val] : assignments[LitToVar(x).val]; }
 
 	void Assignment::new_level() noexcept {
-		trail_lim.push_back(assignments.size());
+		trail_lim.push_back(trails.size());
 		currentLevel++;
 	}
 
@@ -37,7 +37,7 @@ namespace peregrine::clauses {
 		size_t trail_size = trail_lim[level];
 
 		while (trails.size() > trail_size) {
-			auto x = trails.back();
+			Var x = LitToVar(trails.back());
 			assignments[x.val] = LBool::UNDEF;
 			trails.pop_back();
 		}

@@ -20,7 +20,7 @@ namespace peregrine::clauses {
 
 	public:
 		explicit Assignment(size_t numLiterals)
-			: assignments(numLiterals) {
+			: assignments(numLiterals, LBool::UNDEF) {
 		}
 
 		LBool getVar(Var x) const noexcept;

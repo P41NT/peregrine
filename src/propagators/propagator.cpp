@@ -9,6 +9,7 @@ namespace peregrine::propagate {
 
 	template<ClauseStorage Clauses>
 	auto SimpleBCP<Clauses>::propagate(Assignment& assignment) -> std::optional<size_t> {
+		// 2 watched literals for unit clause propagation
 		for (; curr_base_level < assignment.getCurrentLevel(); curr_base_level++) {
 
 			Lit p = assignment.getLitAtLevel(curr_base_level);
