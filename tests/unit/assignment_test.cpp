@@ -112,3 +112,13 @@ TEST_F(AssignmentTest, PopToLevelZero) {
 	EXPECT_EQ(assignment->getVar(Var{ 0 }), LBool::TRUE);
 	EXPECT_EQ(assignment->getVar(Var{ 1 }), LBool::UNDEF);
 }
+
+TEST_F(AssignmentTest, EnqueueLiterals) {
+	assignment->enqueue(Lit{ -1 }, 0);
+	assignment->enqueue(Lit{ 3 }, 0);
+	assignment->enqueue(Lit{ -2 }, 0);
+
+	EXPECT_EQ(assignment->getVar(Var{ 1 }), LBool::FALSE);
+	EXPECT_EQ(assignment->getVar(Var{ 2 }), LBool::FALSE);
+	EXPECT_EQ(assignment->getVar(Var{ 3 }), LBool::TRUE);
+}

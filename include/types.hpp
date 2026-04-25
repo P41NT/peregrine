@@ -16,6 +16,8 @@ namespace peregrine::core {
 			return LBool::TRUE;
 		case LBool::UNDEF:
 			return LBool::UNDEF;
+		default:
+			return LBool::UNDEF;
 		}
 	}
 
@@ -45,6 +47,11 @@ namespace peregrine::core {
 	inline Lit VarToLit(Var x, bool set = true) {
 		int val = x.val;
 		return set ? Lit{ val } : Lit{ -val };
+	}
+
+	inline LBool getSign(Lit x) {
+		if (x.val == 0) return LBool::UNDEF;
+		return x.val < 0 ? LBool::FALSE : LBool::TRUE;
 	}
 
 	inline bool ifNeg(Lit x) {

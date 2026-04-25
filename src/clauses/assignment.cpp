@@ -25,7 +25,7 @@ namespace peregrine::clauses {
 
 	void Assignment::enqueue(Lit x, size_t reason_idx) noexcept {
 		Var x_var = LitToVar(x);
-		LBool x_val = getLit(x);
+		LBool x_val = getSign(x);
 
 		enqueue(x_var, x_val, reason_idx);
 	}
