@@ -30,6 +30,9 @@ namespace peregrine::core {
 	struct StrongInt {
 		explicit StrongInt(int v) : val(v) {}
 		int val;
+
+		StrongInt& operator++() { val++; return *this; }
+		bool operator==(const StrongInt&) const = default;
 	};
 
 	struct LitTag {};
@@ -37,6 +40,10 @@ namespace peregrine::core {
 
 	using Lit = StrongInt<LitTag>;
 	using Var = StrongInt<VarTag>;
+
+	inline Lit operator~(Lit x) {
+		return Lit{ -x.val };
+	}
 
 	// explicit conversions between Var and Lit
 	inline Var LitToVar(Lit x) {

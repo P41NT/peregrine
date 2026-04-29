@@ -1,7 +1,8 @@
 #pragma once
 
-#include <concepts>
 #include "assignment.hpp"
+
+#include <concepts>
 #include <ranges>
 #include <algorithm>
 
@@ -30,14 +31,13 @@ namespace peregrine::clauses {
 
 	template <typename T>
 	concept ClauseStorage = requires(T c, Assignment &assignment, std::vector<Lit>& clause_lits, size_t numVariables, Lit lit, size_t clause_id) {
-		T(numVariables);
 		{ c.is_satisfied(assignment) } -> std::convertible_to<bool>;
 		{ c.not_satisfied(assignment) } -> std::convertible_to<bool>;
 		{ c.add_clause(std::move(clause_lits)) };
 		{ c.add_clause(clause_lits) };
 		{ c.num_clauses() } -> std::convertible_to<size_t>;
 		{ c.num_vars() } -> std::convertible_to<size_t>;
-		{ c.get_clause(clause_id) } -> std::same_as<CNFClause>;
+		{ c.get_clause(clause_id) } -> std::same_as<CNFClause&>;
 	};
 
 	class ClauseStoreDefault {
@@ -75,8 +75,9 @@ namespace peregrine::clauses {
 			clauses.emplace_back(std::forward<T>(clause));
 		}
 
-		auto get_clause(size_t clause_id) -> std::span<Lit> {
-			return clauses[clause_id].literals;
+		CNFClause& get_clause(size_t clause_id) noexcept {
+			auto& req_clause = clauses[clause_id];
+			return req_clause;
 		}
 
 	private:
@@ -85,7 +86,8 @@ namespace peregrine::clauses {
 		}
 	};
 
-	// TODO: Move SharedClausePool definition to relevant file later
+	static_assert(ClauseStorage<ClauseStoreDefault>);
+
 	template<typename T>
 	concept SharedClausePool = ClauseStorage<T> && requires(T pool, CNFClause clause) {
 		{ pool.export_clause(clause) } -> std::same_as<void>;
@@ -93,9 +95,14 @@ namespace peregrine::clauses {
 	};
 
 	// Default placeholder for SharedClausePool when there is no sharing.
-	struct NoSharing {
+	struct NoSharing : ClauseStoreDefault {
+		// temporarily inherting this instead of making dummy vars
+		explicit NoSharing() : ClauseStoreDefault(0) {}
+
 		void export_clause(CNFClause) {}
 		std::vector<CNFClause> import_clauses() { return {}; };
 	};
+
+	static_assert(SharedClausePool<NoSharing>);
 
 }

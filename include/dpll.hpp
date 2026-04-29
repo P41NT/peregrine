@@ -5,6 +5,9 @@
 #include "propagator.hpp"
 #include "parser.hpp"
 
+#include <istream>
+#include <fstream>
+
 namespace peregrine::solver::dpll {
 	using namespace peregrine::core;
 	using namespace peregrine::clauses;
@@ -33,18 +36,16 @@ namespace peregrine::solver::dpll {
 	public:
 		explicit DPLLSolverDefault(Clauses clauses) 
 			: clause_db(std::move(clauses))
-			, assignment(clause_db.num_vars)
+			, assignment(clause_db.num_vars())
 			, propagator(clause_db)
 		{ }
 
 		explicit DPLLSolverDefault(std::string&& filename)
-			: clause_db(dimacs_cnf_parse<ClauseStorage>(std::ifstream(filename)))
-			, assignment(clause_db.num_vars()),
+			: clause_db(dimacs_cnf_parse<Clauses>(std::ifstream(filename)))
+			, assignment(clause_db.num_vars())
 			, propagator(clause_db)
 		{ }
 
 		auto solve() noexcept -> std::optional<std::vector<LBool>>;
 	};
-
-	template DPLLSolverDefault<ClauseStoreDefault, SimpleBCP<ClauseStoreDefault>, NoSharing>;
 };

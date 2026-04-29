@@ -4,6 +4,8 @@
 #include "types.hpp"
 #include <assert.h>
 
+#include <ranges>
+
 namespace peregrine::clauses {
 
 	using namespace peregrine::core;
@@ -36,5 +38,28 @@ namespace peregrine::clauses {
 		size_t getCurrentLevel() const noexcept;
 
 		Lit getLitAtLevel(size_t level) const noexcept;
+
+	private:
+
+		struct VarIterator {
+			Var current;
+
+			using iterator_category = std::forward_iterator_tag;
+			using value_type = Var;
+			using difference_type = std::ptrdiff_t;
+
+			Var operator*() const { 
+				return current; 
+			}
+			VarIterator& operator++() { 
+				++current; return *this; 
+			}
+			VarIterator operator++(int) { 
+				auto tmp = *this; 
+				++(*this); 
+				return tmp; 
+			}
+			bool operator==(const VarIterator&) const = default;
+		};
 	};
 }
