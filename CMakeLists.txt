@@ -38,7 +38,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(GoogleTest)
 
 # Add source to this project's executable.
-add_executable (peregrine "src/peregrine.cpp" "include/peregrine.hpp" "include/clauses.hpp"  "include/assignment.hpp" "include/types.hpp" "include/parser.hpp" "src/clauses/assignment.cpp" "src/parsers/parser.cpp" "src/propagators/propagator.cpp")
+add_executable (peregrine "src/peregrine.cpp" "include/peregrine.hpp" "include/clauses.hpp"  "include/assignment.hpp" "include/types.hpp" "include/parser.hpp" "src/clauses/assignment.cpp" "src/parsers/parser.cpp" "src/propagators/propagator.cpp" "src/solvers/dpll.cpp")
 
 enable_testing()
 add_subdirectory(tests)

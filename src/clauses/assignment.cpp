@@ -52,4 +52,6 @@ namespace peregrine::clauses {
 		assert(level >= 0 && level < trails.size());
 		return trails[level];
 	}
+
+
 }

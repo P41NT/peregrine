@@ -15,7 +15,7 @@ using namespace peregrine;
 int main() {
 
 	// just for testing
-	std::ifstream file("C:\\Users\\shawn\\source\\repos\\peregrine\\tests\\dimacs_cnf\\aim100.cnf");
+	std::ifstream file("C:\\Users\\shawn\\source\\repos\\peregrine\\sat_files\\dimacs_cnf\\aim100.cnf");
 
 	if (!file) {
 		std::cout << "Could not open file" << std::endl;
