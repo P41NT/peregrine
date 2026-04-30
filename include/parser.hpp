@@ -8,13 +8,12 @@ using namespace peregrine::core;
 using namespace peregrine::clauses;
 
 template <ClauseStorage CStore>
-auto dimacs_cnf_parse(std::istream& input_stream) -> CStore;
+auto dimacs_cnf_parse(std::istream &input_stream) -> CStore;
 
 template <ClauseStorage CStore>
-auto dimacs_cnf_parse(std::istream&& input_stream) -> CStore
-{
-    // just a hack to allow rvalue input_streams as well
-    return dimacs_cnf_parse<CStore>(input_stream);
+auto dimacs_cnf_parse(std::istream &&input_stream) -> CStore {
+  // just a hack to allow rvalue input_streams as well
+  return dimacs_cnf_parse<CStore>(input_stream);
 }
 
-}
+} // namespace peregrine::parse

@@ -6,42 +6,40 @@ using namespace peregrine::clauses;
 using namespace peregrine::propagate;
 
 template <typename Clauses, typename Prop, typename SharedPool>
-    requires ClauseStorage<Clauses> && Propagator<Prop, Clauses>
+  requires ClauseStorage<Clauses> && Propagator<Prop, Clauses>
 auto DPLLSolverDefault<Clauses, Prop, SharedPool>::solve() noexcept
-    -> std::optional<std::vector<LBool>>
-{
-    if (!propagator.propagate(assignment)) {
-        return std::nullopt; // unsatisfiable
-    }
+    -> std::optional<std::vector<LBool>> {
 
-    for (Var v : assignment.vars()) {
-        if (assignment.getVar(v) == LBool::UNDEF) {
-            assignment.new_level();
-            assignment.enqueue(v, LBool::TRUE, 0);
+  if (!propagator.propagate(assignment)) {
+    return std::nullopt; // unsatisfiable
+  }
 
-            // search for true assignment
-            if (auto res = solve()) {
-                return res;
-            }
+  for (Var v : assignment.vars()) {
+      assignment.new_level();
+      assignment.enqueue(v, LBool::TRUE, 0);
 
-            // no solve
-            assignment.pop_to_level(assignment.getCurrentLevel() - 1);
-            assignment.new_level();
-            assignment.enqueue(v, LBool::FALSE, 0);
+      // search for true assignment
+      if (auto res = solve()) {
+        return res;
+      }
 
-            // search for false assignment
-            if (auto res = solve()) {
-                return res;
-            }
+      // no solve
+      assignment.pop_to_level(assignment.getCurrentLevel() - 1);
+      assignment.new_level();
+      assignment.enqueue(v, LBool::FALSE, 0);
 
-            assignment.pop_to_level(assignment.getCurrentLevel() - 1);
-            return std::nullopt; // unsatisfiable
-        }
-    }
+      // search for false assignment
+      if (auto res = solve()) {
+        return res;
+      }
 
-    return std::nullopt; // probably unsatisfiable idk
+      assignment.pop_to_level(assignment.getCurrentLevel() - 1);
+      return std::nullopt; // unsatisfiable
+  }
+
+  return std::nullopt; // probably unsatisfiable idk
 }
 
 template class DPLLSolverDefault<ClauseStoreDefault,
-    SimpleBCP<ClauseStoreDefault>>;
+                                 SimpleBCP<ClauseStoreDefault>>;
 } // namespace peregrine::solver::dpll
