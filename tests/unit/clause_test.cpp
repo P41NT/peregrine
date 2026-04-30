@@ -23,31 +23,31 @@ TEST(ClauseTest, GetNumVars) {
 	EXPECT_EQ(clause_storage3->num_vars(), 5);
 }
 
-// TEST(ClauseTest, AddClauses) {
-// 	auto clause_storage = std::make_unique<ClauseStoreDefault>(4);
-// 
-// 	auto lits_rval = std::vector<Lit>{ Lit{1}, Lit{2}, Lit{3} };
-// 	clause_storage->add_clause(std::vector<Lit>{ Lit{1}, Lit{2}, Lit{3} }); // rvalue std::vector
-// 
-// 	std::vector<Lit> lits = { Lit{1}, Lit{-2}, Lit{-3} };
-// 	clause_storage->add_clause(lits); // lvalue std::vector
-// 
-// 	EXPECT_EQ(clause_storage->num_clauses(), 2);
-// 
-// 	auto clause0 = clause_storage->get_clause(0);
-// 	ASSERT_EQ(clause0.size(), lits_rval.size());
-// 
-// 	auto clause1 = clause_storage->get_clause(1);
-// 	ASSERT_EQ(clause1.size(), lits_rval.size());
-// 
-// 	for (int lits_idx = 0; lits_idx < lits_rval.size(); lits_idx++) {
-// 		EXPECT_EQ(lits_rval[lits_idx], clause0[lits_idx]);
-// 	}
-// 
-// 	for (int lits_idx = 0; lits_idx < lits.size(); lits_idx++) {
-// 		EXPECT_EQ(lits[lits_idx], clause1[lits_idx]);
-// 	}
-// }
+ //TEST(ClauseTest, AddClauses) {
+ //	auto clause_storage = std::make_unique<ClauseStoreDefault>(4);
+ //
+ //	//auto lits_rval = std::vector<Lit>{ Lit{1}, Lit{2}, Lit{3} };
+ //	//clause_storage->add_clause(std::vector<Lit>{ Lit{1}, Lit{2}, Lit{3} }); // rvalue std::vector
+ //
+ //	std::vector<Lit> lits = { Lit{1}, Lit{-2}, Lit{-3} };
+ //	clause_storage->add_clause(lits); // lvalue std::vector
+ //
+ //	EXPECT_EQ(clause_storage->num_clauses(), 2);
+ //
+ //	auto clause0 = clause_storage->get_clause(0);
+ //	ASSERT_EQ(clause0.literals.size(), lits.size());
+ //
+ //	//auto clause1 = clause_storage->get_clause(1);
+ //	//ASSERT_EQ(clause1.literals.size(), lits_rval.size());
+ //
+ //	//for (int lits_idx = 0; lits_idx < lits_rval.size(); lits_idx++) {
+ //	//	EXPECT_EQ(lits_rval[lits_idx], clause0.literals[lits_idx]);
+ //	//}
+ //
+ //	for (int lits_idx = 0; lits_idx < lits.size(); lits_idx++) {
+ //		EXPECT_EQ(lits[lits_idx], clause0.literals[lits_idx]);
+ //	}
+ //}
 
 TEST(ClauseTest, ClauseIsSatisfiedTest) {
 	auto clause_storage0 = std::make_unique<ClauseStoreDefault>(4);

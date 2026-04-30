@@ -22,7 +22,8 @@ namespace peregrine::clauses {
 
 	public:
 		explicit Assignment(size_t numLiterals)
-			: assignments(numLiterals + 1, LBool::UNDEF) 
+			: assignments(numLiterals + 1, LBool::UNDEF)
+			, numVariables(numLiterals)
 		{ }
 
 		LBool getVar(Var x) const noexcept;
@@ -37,29 +38,11 @@ namespace peregrine::clauses {
 
 		size_t getCurrentLevel() const noexcept;
 
-		Lit getLitAtLevel(size_t level) const noexcept;
+		std::span<Lit> getLitsAtLevel(size_t level) noexcept;
 
-	private:
-
-		struct VarIterator {
-			Var current;
-
-			using iterator_category = std::forward_iterator_tag;
-			using value_type = Var;
-			using difference_type = std::ptrdiff_t;
-
-			Var operator*() const { 
-				return current; 
-			}
-			VarIterator& operator++() { 
-				++current; return *this; 
-			}
-			VarIterator operator++(int) { 
-				auto tmp = *this; 
-				++(*this); 
-				return tmp; 
-			}
-			bool operator==(const VarIterator&) const = default;
-		};
+		auto vars() const -> decltype(auto) {
+			return std::views::iota(size_t{ 1 }, numVariables + 1) |
+				std::views::transform([](int i) { return Var(i); });
+		}
 	};
 }

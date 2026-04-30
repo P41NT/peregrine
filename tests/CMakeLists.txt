@@ -2,6 +2,7 @@ add_library(peregrine_core OBJECT
 	"../src/clauses/assignment.cpp"
 	"../src/parsers/parser.cpp"
 	"../src/propagators/propagator.cpp"
+	"../src/solvers/dpll.cpp"
 )
 
 target_include_directories(peregrine_core PUBLIC
@@ -10,40 +11,14 @@ target_include_directories(peregrine_core PUBLIC
 
 include(GoogleTest)
 
-add_executable(assignment_test
-	unit/assignment_test.cpp
-	$<TARGET_OBJECTS:peregrine_core>
-)
+# Helper for adding testcases
+function(add_test test_name test_source)
+	add_executable(${test_name} ${test_source} $<TARGET_OBJECTS:peregrine_core>)
+	target_link_libraries(${test_name} gtest_main gtest)
+	target_include_directories(${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+	gtest_discover_tests(${test_name} DISCOVERY_MODE POST_BUILD)
+endfunction()
 
-target_link_libraries(assignment_test
-	gtest_main
-	gtest
-)
-
-target_include_directories(assignment_test PRIVATE
-	${CMAKE_SOURCE_DIR}/include
-)
-
-add_executable(clause_test
-	unit/clause_test.cpp
-	$<TARGET_OBJECTS:peregrine_core>
-)
-
-target_link_libraries(clause_test
-	gtest_main
-	gtest
-)
-
-target_include_directories(clause_test PRIVATE
-	${CMAKE_SOURCE_DIR}/include
-)
-
-gtest_discover_tests(
-	assignment_test
-	DISCOVERY_MODE POST_BUILD
-)
-
-gtest_discover_tests(
-	clause_test
-	DISCOVER_MODE POST_BUILD
-)
+add_test(assignment_test unit/assignment_test.cpp)
+add_test(clause_test unit/clause_test.cpp)
+add_test(propagate_test unit/propagate_test.cpp)

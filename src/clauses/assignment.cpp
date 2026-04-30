@@ -48,10 +48,12 @@ namespace peregrine::clauses {
 
 	size_t Assignment::getCurrentLevel() const noexcept { return currentLevel; }
 
-	Lit Assignment::getLitAtLevel(size_t level) const noexcept {
+	std::span<Lit> Assignment::getLitsAtLevel(size_t level) noexcept {
 		assert(level >= 0 && level < trails.size());
-		return trails[level];
-	}
+		auto trail_start = level == 0 ? 0 : trail_lim[level - 1];
+		auto trail_end = trail_lim[level];
 
+		return std::span<Lit>(trails.data() + trail_start, trail_end - trail_start);
+	}
 
 }
