@@ -23,31 +23,49 @@ TEST(ClauseTest, GetNumVars) {
 	EXPECT_EQ(clause_storage3->num_vars(), 5);
 }
 
- //TEST(ClauseTest, AddClauses) {
- //	auto clause_storage = std::make_unique<ClauseStoreDefault>(4);
- //
- //	//auto lits_rval = std::vector<Lit>{ Lit{1}, Lit{2}, Lit{3} };
- //	//clause_storage->add_clause(std::vector<Lit>{ Lit{1}, Lit{2}, Lit{3} }); // rvalue std::vector
- //
- //	std::vector<Lit> lits = { Lit{1}, Lit{-2}, Lit{-3} };
- //	clause_storage->add_clause(lits); // lvalue std::vector
- //
- //	EXPECT_EQ(clause_storage->num_clauses(), 2);
- //
- //	auto clause0 = clause_storage->get_clause(0);
- //	ASSERT_EQ(clause0.literals.size(), lits.size());
- //
- //	//auto clause1 = clause_storage->get_clause(1);
- //	//ASSERT_EQ(clause1.literals.size(), lits_rval.size());
- //
- //	//for (int lits_idx = 0; lits_idx < lits_rval.size(); lits_idx++) {
- //	//	EXPECT_EQ(lits_rval[lits_idx], clause0.literals[lits_idx]);
- //	//}
- //
- //	for (int lits_idx = 0; lits_idx < lits.size(); lits_idx++) {
- //		EXPECT_EQ(lits[lits_idx], clause0.literals[lits_idx]);
- //	}
- //}
+ TEST(ClauseTest, AddClausesLValue) {
+ 	auto clause_storage = std::make_unique<ClauseStoreDefault>(4);
+
+	std::vector<std::vector<Lit>> clauses = {
+		{ Lit{1}, Lit{-2}, Lit{-3} },
+		{ Lit{-1}, Lit{2}, Lit{-3} },
+		{ Lit{-1}, Lit{-2}, Lit{3} }
+	};
+
+	for (auto& clause : clauses) {
+		clause_storage->add_clause(clause);
+	}
+ 
+ 	EXPECT_EQ(clause_storage->num_clauses(), 3);
+
+	for (int clause_idx = 0; clause_idx < clauses.size(); clause_idx++) {
+		const auto& clause = clause_storage->get_clause(clause_idx);
+		EXPECT_EQ(clause.literals, clauses[clause_idx]);
+	}
+ }
+
+ TEST(ClauseTest, AddClausesRValue) {
+ 	auto clause_storage = std::make_unique<ClauseStoreDefault>(4);
+
+	std::vector<std::vector<Lit>> clauses = {
+		{ Lit{1}, Lit{-2}, Lit{-3} },
+		{ Lit{-1}, Lit{2}, Lit{-3} },
+		{ Lit{-1}, Lit{-2}, Lit{3} }
+	};
+
+	auto clauses_copy = clauses;
+
+	for (auto& clause : clauses_copy) {
+		clause_storage->add_clause(std::move(clause));
+	}
+ 
+ 	EXPECT_EQ(clause_storage->num_clauses(), 3);
+
+	for (int clause_idx = 0; clause_idx < clauses.size(); clause_idx++) {
+		const auto& clause = clause_storage->get_clause(clause_idx);
+		EXPECT_EQ(clause.literals, clauses[clause_idx]);
+	}
+ }
 
 TEST(ClauseTest, ClauseIsSatisfiedTest) {
 	auto clause_storage0 = std::make_unique<ClauseStoreDefault>(4);

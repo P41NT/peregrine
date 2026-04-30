@@ -24,8 +24,9 @@ namespace peregrine::clauses {
 			});
 		}
 
-		explicit CNFClause(std::vector<Lit>&& lits)
-			: literals(std::move(lits))
+		template<typename T> requires std::constructible_from<std::vector<Lit>, T>
+		explicit CNFClause(T&& lits)
+			: literals(std::forward<T>(lits))
 		{ }
 	};
 
@@ -69,9 +70,8 @@ namespace peregrine::clauses {
 			return numVariables;
 		}
 
-		template <typename T> requires std::convertible_to<T, std::vector<Lit>>
+		template <typename T> requires std::constructible_from<std::vector<Lit>, T>
 		void add_clause(T&& clause) {
-			size_t current_clause_index = num_clauses();
 			clauses.emplace_back(std::forward<T>(clause));
 		}
 
