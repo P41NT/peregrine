@@ -14,8 +14,9 @@ namespace peregrine::propagate {
 
 		for (; curr_base_level <= assignment.getCurrentLevel(); curr_base_level++) {
 
-			for (Lit p : assignment.getLitsAtLevel(curr_base_level)) {
-				Lit np = ~p;
+			std::span<const Lit> level_lits = assignment.getLitsAtLevel(curr_base_level);
+			for (const Lit p : level_lits) {
+				const Lit np = ~p;
 				auto& curr_watch = watches[np];
 
 				std::erase_if(curr_watch, [=, &assignment, &conflict_idx](size_t clause_idx) {
@@ -45,7 +46,7 @@ namespace peregrine::propagate {
 						conflict_idx.emplace(clause_idx);
 						return true; // stays in watch[np]
 					}
-					});
+				});
 				
 				if (conflict_idx.has_value()) {
 					return conflict_idx;

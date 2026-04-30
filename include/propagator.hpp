@@ -19,7 +19,7 @@ namespace peregrine::propagate {
 	template<ClauseStorage Clauses>
 	class SimpleBCP {
 	private:
-		size_t curr_base_level = -1;
+		size_t curr_base_level = 0;
 
 		// helper struct to index watches easily
 		struct Watches {

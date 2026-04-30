@@ -24,7 +24,13 @@ namespace peregrine::clauses {
 		explicit Assignment(size_t numLiterals)
 			: assignments(numLiterals + 1, LBool::UNDEF)
 			, numVariables(numLiterals)
-		{ }
+		{
+			// reserve enough space for all literals to be assigned at the same level 
+			// HUGE EDGE CASE: if we don't reserve enough space, then when we pop to level 0, the std::span returned by getLitsAtLevel(0) will be invalidated and cause undefined behavior when accessed
+			trails.reserve(numLiterals + 1);
+			trail_lim.reserve(numLiterals + 1);
+			cause_idxs.reserve(numLiterals + 1);
+		}
 
 		LBool getVar(Var x) const noexcept;
 		LBool getLit(Lit x) const noexcept;
@@ -38,7 +44,7 @@ namespace peregrine::clauses {
 
 		size_t getCurrentLevel() const noexcept;
 
-		std::span<Lit> getLitsAtLevel(size_t level) noexcept;
+		std::span<const Lit> getLitsAtLevel(size_t level) const noexcept;
 
 		auto vars() const -> decltype(auto) {
 			return std::views::iota(size_t{ 1 }, numVariables + 1) |
