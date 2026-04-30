@@ -1,0 +1,6 @@
+Checks: >
+  modernize-*,
+  readability-*,
+  performance-*,
+  bugprone-*,
+  clang-analyzer-*
