@@ -61,4 +61,19 @@ std::span<const Lit> Assignment::getLitsAtLevel(size_t level) const noexcept {
                               trail_end - trail_start);
 }
 
+auto Assignment::getAllAssignments() -> std::optional<std::vector<Lit>> {
+  std::vector<Lit> sat_assignments;
+  sat_assignments.reserve(numVariables);
+
+  for (auto var : vars()) {
+    LBool currVal = this->getVar(var);
+    if (currVal == LBool::UNDEF) {
+      return std::nullopt;
+    }
+    sat_assignments.emplace_back(VarToLit(var, currVal == LBool::TRUE));
+  }
+
+  return sat_assignments;
+}
+
 } // namespace peregrine::clauses

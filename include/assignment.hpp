@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <ranges>
 #include <vector>
+#include <optional>
 
 namespace peregrine::clauses {
 
@@ -50,5 +51,7 @@ public:
     return std::views::iota(size_t{1}, numVariables + 1) |
            std::views::transform([](int i) { return Var(i); });
   }
+
+  auto getAllAssignments() -> std::optional<std::vector<Lit>>;
 };
 } // namespace peregrine::clauses

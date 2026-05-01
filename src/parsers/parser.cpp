@@ -46,6 +46,33 @@ auto dimacs_cnf_parse(std::istream &input_stream) -> CStore {
   return CStore(1);
 }
 
+auto dimacs_output_parse(std::istream &input_stream)
+    -> std::optional<std::vector<Lit>> {
+
+  std::string result;
+  input_stream >> result;
+
+  if (result == "UNSAT") {
+    return std::nullopt;
+  }
+  assert(result == "SAT");
+
+  std::vector<Lit> lits;
+
+  while (true) {
+    int curr_lit;
+    input_stream >> curr_lit;
+
+    if (input_stream.eof() || input_stream.bad()) {
+      break;
+    }
+
+    lits.emplace_back(curr_lit);
+  }
+
+  return lits;
+}
+
 template ClauseStoreDefault
 dimacs_cnf_parse<ClauseStoreDefault>(std::istream &);
 

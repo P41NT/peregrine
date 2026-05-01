@@ -22,7 +22,7 @@ concept DPLLSolver = ClauseStorage<Clauses> && Propagator<Prop, Clauses> &&
                        T(clauses);
                        {
                          d.solve()
-                       } -> std::same_as<std::optional<std::vector<LBool>>>;
+                       } -> std::same_as<std::optional<std::vector<Lit>>>;
                      };
 
 template <typename Clauses, typename Prop, typename SharedPool = NoSharing>
@@ -38,10 +38,10 @@ public:
       : clause_db(std::move(clauses)), assignment(clause_db.num_vars()),
         propagator(clause_db) {}
 
-  explicit DPLLSolverDefault(std::string &&filename)
+  explicit DPLLSolverDefault(std::string filename)
       : clause_db(dimacs_cnf_parse<Clauses>(std::ifstream(filename))),
         assignment(clause_db.num_vars()), propagator(clause_db) {}
 
-  auto solve() noexcept -> std::optional<std::vector<LBool>>;
+  auto solve() noexcept -> std::optional<std::vector<Lit>>;
 };
 }; // namespace peregrine::solver::dpll

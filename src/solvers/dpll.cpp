@@ -8,36 +8,42 @@ using namespace peregrine::propagate;
 template <typename Clauses, typename Prop, typename SharedPool>
   requires ClauseStorage<Clauses> && Propagator<Prop, Clauses>
 auto DPLLSolverDefault<Clauses, Prop, SharedPool>::solve() noexcept
-    -> std::optional<std::vector<LBool>> {
+    -> std::optional<std::vector<Lit>> {
 
   if (!propagator.propagate(assignment)) {
     return std::nullopt; // unsatisfiable
   }
 
   for (Var v : assignment.vars()) {
-      assignment.new_level();
-      assignment.enqueue(v, LBool::TRUE, 0);
 
-      // search for true assignment
-      if (auto res = solve()) {
-        return res;
-      }
+    // skip if its already defined
+    if (assignment.getVar(v) != LBool::UNDEF)
+      continue;
 
-      // no solve
-      assignment.pop_to_level(assignment.getCurrentLevel() - 1);
-      assignment.new_level();
-      assignment.enqueue(v, LBool::FALSE, 0);
+    assignment.new_level();
+    assignment.enqueue(v, LBool::TRUE, 0);
 
-      // search for false assignment
-      if (auto res = solve()) {
-        return res;
-      }
+    // search for true assignment
+    if (auto res = solve()) {
+      return res;
+    }
 
-      assignment.pop_to_level(assignment.getCurrentLevel() - 1);
-      return std::nullopt; // unsatisfiable
+    // no solve
+    assignment.pop_to_level(assignment.getCurrentLevel() - 1);
+    assignment.new_level();
+    assignment.enqueue(v, LBool::FALSE, 0);
+
+    // search for false assignment
+    if (auto res = solve()) {
+      return res;
+    }
+
+    assignment.pop_to_level(assignment.getCurrentLevel() - 1);
+    return std::nullopt; // unsatisfiable
   }
 
-  return std::nullopt; // probably unsatisfiable idk
+  // gotta check and return the the actual assignment
+  return assignment.getAllAssignments();
 }
 
 template class DPLLSolverDefault<ClauseStoreDefault,
