@@ -30,7 +30,7 @@ private:
     }
 
   public:
-    explicit Watches(size_t numVars) : _watches(2 * numVars + 1) {}
+    explicit Watches(size_t numVars) : _watches(2 * numVars + 2) {}
 
     std::vector<std::vector<size_t>> _watches;
 
@@ -45,6 +45,9 @@ private:
 
   Clauses &clauses;
   Watches watches;
+  std::vector<Lit> prop_queue;
+
+  auto propagate_lit(Lit literal, Assignment& assignment) -> std::optional<size_t>;
 
 public:
   // Expects an empty assignment but filled clauses
@@ -58,6 +61,8 @@ public:
         watches[watched_lit].push_back(clause_idx);
       }
     }
+
+    prop_queue.reserve(2 * _clauses.num_vars() + 2);
   }
 
   auto propagate(Assignment &assignment) -> std::optional<size_t>;

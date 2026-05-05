@@ -53,7 +53,7 @@ void Assignment::pop_to_level(size_t level) noexcept {
 size_t Assignment::getCurrentLevel() const noexcept { return currentLevel; }
 
 std::span<const Lit> Assignment::getLitsAtLevel(size_t level) const noexcept {
-  assert(level >= 0 && level < trails.size());
+  assert(level >= 0 && level <= trails.size());
   auto trail_start = level == 0 ? 0 : trail_lim[level - 1];
   auto trail_end = level == trail_lim.size() ? trails.size() : trail_lim[level];
 

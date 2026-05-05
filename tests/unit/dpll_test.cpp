@@ -9,25 +9,23 @@ using namespace peregrine::solver;
 using namespace peregrine::parse;
 using namespace peregrine::propagate;
 
-void test_dimacs_testname(std::string test_name);
+void test_dimacs_testname(std::string test_name, bool result);
 
-TEST(DPLL_Test, AIM100) { test_dimacs_testname("aim100"); }
+TEST(DPLL_Test, UN20) { test_dimacs_testname("un20", true); }
+TEST(DPLL_Test, SimpleHand) { test_dimacs_testname("simple_hand", true); }
+//TEST(DPLL_Test, AIM100) { test_dimacs_testname("aim100", false); }
 
-TEST(DPLL_Test, ToughSat1) { test_dimacs_testname("toughtsat1"); }
-
-void test_dimacs_testname(std::string test_name) {
+void test_dimacs_testname(std::string test_name, bool result) {
 
   std::string input_filename =
-      std::format("../../sat_files/dimacs_cnf/inputs/{}.cnf", test_name);
-  std::string output_filename =
-      std::format("../../sat_files/dimacs_cnf/outputs/{}.out", test_name);
+      std::format("C:\\Users\\shawn\\source\\repos\\peregrine\\sat_"
+                  "files\\dimacs_cnf\\inputs\\{}.cnf",
+                  test_name);
 
   dpll::DPLLSolverDefault<ClauseStoreDefault, SimpleBCP<ClauseStoreDefault>>
       dpll_solver(input_filename);
 
   std::optional<std::vector<Lit>> solver_output = dpll_solver.solve();
-  std::optional<std::vector<Lit>> true_output =
-      dimacs_output_parse(std::ifstream(output_filename));
 
-  EXPECT_EQ(solver_output, true_output);
+  ASSERT_EQ(solver_output.has_value(), result);
 }

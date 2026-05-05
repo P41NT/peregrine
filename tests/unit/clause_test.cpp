@@ -95,3 +95,4 @@ TEST(ClauseTest, ClauseIsSatisfiedTest) {
 
 	EXPECT_EQ(clause_storage0->is_satisfied(*assignment0), false);
 }
+

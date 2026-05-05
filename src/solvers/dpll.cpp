@@ -10,7 +10,7 @@ template <typename Clauses, typename Prop, typename SharedPool>
 auto DPLLSolverDefault<Clauses, Prop, SharedPool>::solve() noexcept
     -> std::optional<std::vector<Lit>> {
 
-  if (!propagator.propagate(assignment)) {
+  if (propagator.propagate(assignment).has_value()) {
     return std::nullopt; // unsatisfiable
   }
 
@@ -43,7 +43,9 @@ auto DPLLSolverDefault<Clauses, Prop, SharedPool>::solve() noexcept
   }
 
   // gotta check and return the the actual assignment
-  return assignment.getAllAssignments();
+  if (this->clause_db.is_satisfied(assignment))
+    return assignment.getAllAssignments();
+  return std::nullopt;
 }
 
 template class DPLLSolverDefault<ClauseStoreDefault,
